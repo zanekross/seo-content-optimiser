@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEO Content Optimizer</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+
+</head>
+<body>
+    <h1>SEO Content Optimizer</h1>
+    <p>Enter your HTML content:</p>
+    <textarea id="htmlContent" rows="10" cols="50"></textarea>
+    <p>Enter keywords (one per line):</p>
+    <textarea id="keywords" rows="5" cols="30"></textarea>
+    <p>Enter additional keywords and URLs (URL followed by keywords, one per line):</p>
+    <textarea id="additionalKeywords" rows="10" cols="50"></textarea>
+    <br><br>
+    <button onclick="optimizeContent()">Optimize</button>
+    <button onclick="finishOptimization()">Finish</button>
+    
+    <!-- Add a <pre> element for output -->
+    <pre id="outputContent"></pre>
+
+    <button onclick="copyToClipboard()">Copy to Clipboard</button>
+
+    <div id="keywordStatistics">
+        <h2>Keyword Statistics</h2>
+        <ul id="keywordList"></ul>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
