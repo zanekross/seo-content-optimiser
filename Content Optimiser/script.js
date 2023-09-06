@@ -25,7 +25,15 @@ function optimizeContent() {
         }
     }
 
-    let cleanedContent = htmlContent.replace(/<\/?(strong|em)>/g, ''); // Remove existing <strong> and <em> tags
+    let cleanedContent = htmlContent.replace(/&nbsp;/g, '');
+
+    cleanedContent = cleanedContent.replace(/\.<\/strong>/g, '.</realstrong>');
+
+    cleanedContent = cleanedContent.replace(/<p><strong>H2:/g, '<h2>');
+
+    cleanedContent = cleanedContent.replace(/<\/strong><\/p>/g, '<\/h2>');
+
+    cleanedContent = cleanedContent.replace(/<\/?(strong|em)>/g, ''); // Remove existing <strong> and <em> tags
 
     cleanedContent = cleanedContent.replace(/<\/(p|h[1-6]|li)>/g, '</$1>\n');
 
@@ -41,13 +49,16 @@ function optimizeContent() {
 
     cleanedContent = cleanedContent.replace(/&ldquo;/g, '"');
 
+
+
     cleanedContent = cleanedContent.trim();
 
     let optimizedContent = cleanedContent;
 
     // Use regular expressions to find and replace keywords inside open <h1> tags with <em> tags
     primaryKeywords.forEach(keyword => {
-        const keywordPattern = new RegExp(`(<h1[^>]*>.*?)(\\b${keyword}\\b)(.*?</h1>)`, "gi");
+        const keywordPattern = new RegExp(`(<h2[^>]*>.*?)(\\b${keyword}\\b)(.*?</h2>)`, "gi");
+
         optimizedContent = optimizedContent.replace(keywordPattern, (match, beforeH1, keywordMatch, afterH1) => {
             if (!keywordStats[keyword]) {
                 keywordStats[keyword] = { strongTagCount: 0, aTagCount: 0, emTagCount: 0 };
@@ -71,10 +82,27 @@ function optimizeContent() {
         }
     });
 
+        // Wrap additional keywords in <a> tags with the relevant URLs and update keyword statistics
+    Object.keys(additionalKeywordsMap).forEach(url => {
+        const keywords = additionalKeywordsMap[url];
+        keywords.forEach(keyword => {
+            const keywordPattern = new RegExp(keyword, "gi");
+            optimizedContent = optimizedContent.replace(keywordPattern, match => {
+                // Update keyword statistics for <a> tags
+                if (!keywordStats[keyword]) {
+                    keywordStats[keyword] = { strongTagCount: 0, aTagCount: 1 };
+                } else {
+                    keywordStats[keyword].aTagCount++;
+                }
+                return `<a href="${url}">${match}</a>`;
+            });
+        });
+    });
+
     // Reset the flag after processing primary keywords
     insideH1Tag = false;
 
-
+    optimizedContent = optimizedContent.replace(/\.<\/realstrong>/g, '.</strong>');
     optimizedContent = optimizedContent.replace(/<em><strong>(.*?)<\/strong><\/em>/g, '<em>$1</em>');
     document.getElementById("outputContent").textContent = optimizedContent;
 }
