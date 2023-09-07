@@ -31,9 +31,26 @@ function optimizeContent() {
 
     let cleanedContent = htmlContent.replace(/&nbsp;/g, '');
 
-    cleanedContent = cleanedContent.replace(/\.<\/strong>/g, '.</realstrong>');
-
     cleanedContent = cleanedContent.replace(/<p><br \/><br \/><\/p>/, '');
+
+    // Basically looking for any occurences of </realstrong> the tag we made earlier to represent 
+    // actual </strong></p> occurences as opposed to when it is just appearing in headings
+
+    // cleanedContent = cleanedContent.replace(/\.<\/strong>/g, '.</realstrong>');
+
+    //Using the logic that strong tags at the end of actual paragaphs will be preceeded
+    //or followed by punctuation marks of some sort. Remove them before </strong></p> is 
+    //replaced with </h2>
+
+    cleanedContent = cleanedContent.replace(/\.<\/strong>/g, '.');
+    cleanedContent = cleanedContent.replace(/<\/strong>\./g, '.');
+
+    // cleanedContent = cleanedContent.replace(/\?<\/strong>/g, '?');
+    // cleanedContent = cleanedContent.replace(/<\/strong>\?/g, '?');
+    
+    // cleanedContent = cleanedContent.replace(/!<\/strong>/g, '!');
+    // cleanedContent = cleanedContent.replace(/<\/strong>!/g, '!');
+
 
     cleanedContent = cleanedContent.replace(/<p><strong>H[1-2]:/g, '<h2>');
 
@@ -46,6 +63,8 @@ function optimizeContent() {
     cleanedContent = cleanedContent.replace(/<(ol|ul)>/g, '<$1>\n');
 
     cleanedContent = cleanedContent.replace(/\n{3,}/g, '\n\n');
+
+    cleanedContent = cleanedContent.replace(/<li>/g, '  <li>');
 
     cleanedContent = cleanedContent.replace(/&nbsp;/g, '');
 
@@ -95,22 +114,25 @@ function optimizeContent() {
         const keywords = additionalKeywordsMap[url];
         keywords.forEach(keyword => {
             const keywordPattern = new RegExp(keyword, "gi");
-            optimizedContent = optimizedContent.replace(keywordPattern, match => {
-                // Update keyword statistics for <a> tags
-                if (!keywordStats[keyword]) {
-                    keywordStats[keyword] = { strongTagCount: 0, aTagCount: 1 };
-                } else {
-                    keywordStats[keyword].aTagCount++;
+            
+                // Check if the keyword is not in the primary keywords list
+                if (!primaryKeywords.includes(keyword)) {
+                    optimizedContent = optimizedContent.replace(keywordPattern, match => {
+                        // Update keyword statistics for <a> tags
+                        if (!keywordStats[keyword]) {
+                            keywordStats[keyword] = { strongTagCount: 0, aTagCount: 1 };
+                        } else {
+                            keywordStats[keyword].aTagCount++;
+                        }
+                        return `<a href="${url}">${match}</a>`;
+                    });
                 }
-                return `<a href="${url}">${match}</a>`;
             });
         });
-    });
 
     // Reset the flag after processing primary keywords
     insideH1Tag = false;
-
-    optimizedContent = optimizedContent.replace(/\.<\/realstrong>/g, '.</strong>');
+    
     optimizedContent = optimizedContent.replace(/<em><strong>(.*?)<\/strong><\/em>/g, '<em>$1</em>');
     document.getElementById("outputContent").textContent = optimizedContent;
 }
