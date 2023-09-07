@@ -8,27 +8,56 @@
 
 </head>
 <body>
-    <h1>SEO Content Optimizer</h1>
-    <p>Enter your HTML content:</p>
-    <textarea id="htmlContent" rows="10" cols="50"></textarea>
-    <p>Enter keywords (one per line):</p>
-    <textarea id="keywords" rows="5" cols="30"></textarea>
-    <p>Enter additional keywords and URLs (URL followed by keywords, one per line):</p>
-    <textarea id="additionalKeywords" rows="10" cols="50"></textarea>
-    <br><br>
-    <button onclick="optimizeContent()">Optimize</button>
-    <button onclick="finishOptimization()">Finish</button>
-    
-    <!-- Add a <pre> element for output -->
-    <pre id="outputContent"></pre>
+    <div id="app-container">
+        <h1>SEO Content Optimizer</h1>
+        <h3>Enter your HTML content:</h3>
+        <p class="subtitle-text">Put it straight from the .docx file into <a href="https://wordhtml.com/">https://wordhtml.com/</a> first.</p>
+        <p class="example-text">Should look something like: </br>
+        <i>
+            &lt;p&gt;&lt;strong&gt;H1: How to find rewarding franchise opportunities under 100k&lt;/strong&gt;&lt;/p&gt;<br>
+            &lt;p&gt;A common question that Guerrilla Franchising receives is, "Will a &lt;strong&gt;franchise under 100k&lt;/strong&gt; yield a high ROI?"&lt;/p&gt;
+        </i>
+        </p>
+        <textarea id="htmlContent" rows="20" cols="50"></textarea>
+        <h3>Enter Keywords for current page:</h3>
+        <p class="subtitle-text">One keyword per line w/ no empty lines in between: </p>
+        <p class="example-text"></br>
+        <i>
+            franchises under 100k<br>
+            franchise under 100k<br>
+            best franchises under 100k<br>
+        </i>
+        </p>
+        <textarea id="keywords" rows="5" cols="30"></textarea>
+        <h3>Enter all URLs & Keywords (for internal linking purposes):</h3>
+        <p class="subtitle-text">URL followed by 1 KW per line, line break between groups:</p>
+        <p class="example-text">
+        <i>
+            /franchise-opportunities/<br>
+            franchise opportunities <br>
+            franchising opportunities <br>
+            opportunities for franchising<br>
+            <br>
+            /blog/million-dollars/<br>
+            million dollar franchises<br>
+        </i>
+        </p>
+        <textarea id="additionalKeywords" rows="10" cols="50"></textarea>
+        <br><br>
+        <button onclick="optimizeContent()">Optimize</button>
+        
+        <!-- Add a <pre> element for output -->
+        <pre id="outputContent"></pre>
 
-    <button onclick="copyToClipboard()">Copy to Clipboard</button>
+        <button id="copyToClipboardButton" onclick="copyToClipboard()">Copy to Clipboard</button>
 
-    <div id="keywordStatistics">
-        <h2>Keyword Statistics</h2>
-        <ul id="keywordList"></ul>
+        <button id="finishButton" onclick="finishOptimization()">Finish</button>
+        <div id="keywordStatistics">
+            <h2>Keyword Statistics</h2>
+            <ul id="keywordList"></ul>
+        </div>
+
+        <script src="script.js"></script>
     </div>
-
-    <script src="script.js"></script>
 </body>
 </html>

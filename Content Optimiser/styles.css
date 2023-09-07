@@ -1,8 +1,18 @@
 body {
     font-family: Arial, sans-serif;
+    font-size: 14px;
     background-color: #f7f7f7;
     margin: 0;
     padding: 0;
+}
+
+#keywordStatistics, #finishButton, #finishButton, #copyToClipboardButton, pre {
+    display: none;
+}
+
+.example-text {
+    font-size: 10px;
+    color: #666666;
 }
 
 h1 {
@@ -28,22 +38,26 @@ textarea, button {
 }
 
 button {
-    background-color: #007BFF;
-    color: #fff;
+    background-color: #A5DA2F;
+    color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 button:hover {
-    background-color: #0056b3;
+    background-color: #73a30a;
+    color: #black;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 pre {
     white-space: pre-wrap;
+    color: white;
     word-wrap: break-word;
-    background-color: #f7f7f7;
+    background-color: #303030;
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
@@ -62,3 +76,10 @@ li {
     margin-bottom: 10px;
     font-weight: bold;
 }
+
+#app-container {
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+}
+

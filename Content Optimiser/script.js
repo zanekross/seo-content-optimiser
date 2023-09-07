@@ -1,10 +1,14 @@
 const keywordStats = {};
 
 function optimizeContent() {
+    document.getElementById('outputContent').style.display = 'block';
+    document.getElementById('keywordStatistics').style.display = 'block';
+    document.getElementById('finishButton').style.display = 'block';
+    document.getElementById('copyToClipboardButton').style.display = 'block';
+
     const htmlContent = document.getElementById("htmlContent").value;
     const keywordsTextarea = document.getElementById("keywords");
     const primaryKeywords = keywordsTextarea.value.split("\n").map(keyword => keyword.trim());
-
     const additionalKeywordsTextarea = document.getElementById("additionalKeywords");
     const additionalKeywordsAndUrls = additionalKeywordsTextarea.value.trim().split('\n');
     
@@ -29,13 +33,17 @@ function optimizeContent() {
 
     cleanedContent = cleanedContent.replace(/\.<\/strong>/g, '.</realstrong>');
 
-    cleanedContent = cleanedContent.replace(/<p><strong>H2:/g, '<h2>');
+    cleanedContent = cleanedContent.replace(/<p><br \/><br \/><\/p>/, '');
+
+    cleanedContent = cleanedContent.replace(/<p><strong>H[1-2]:/g, '<h2>');
 
     cleanedContent = cleanedContent.replace(/<\/strong><\/p>/g, '<\/h2>');
 
     cleanedContent = cleanedContent.replace(/<\/?(strong|em)>/g, ''); // Remove existing <strong> and <em> tags
 
-    cleanedContent = cleanedContent.replace(/<\/(p|h[1-6]|li)>/g, '</$1>\n');
+    cleanedContent = cleanedContent.replace(/<\/(p|h[1-6]|li|ul|ol)>/g, '</$1>\n');
+
+    cleanedContent = cleanedContent.replace(/<(ol|ul)>/g, '<$1>\n');
 
     cleanedContent = cleanedContent.replace(/\n{3,}/g, '\n\n');
 
@@ -49,7 +57,7 @@ function optimizeContent() {
 
     cleanedContent = cleanedContent.replace(/&ldquo;/g, '"');
 
-
+    cleanedContent = cleanedContent.replace(/&ndash;/g, '-');
 
     cleanedContent = cleanedContent.trim();
 
@@ -193,8 +201,6 @@ function copyToClipboard() {
     // Remove the temporary input element
     document.body.removeChild(tempInput);
 
-    // Provide user feedback (optional)
-    alert("Copied to clipboard: \n" + textToCopy);
 }
 
 
