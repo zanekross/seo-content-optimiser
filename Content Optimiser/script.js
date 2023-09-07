@@ -12,6 +12,9 @@ function optimizeContent() {
     const additionalKeywordsTextarea = document.getElementById("additionalKeywords");
     const additionalKeywordsAndUrls = additionalKeywordsTextarea.value.trim().split('\n');
     
+    console.log(primaryKeywords);
+    console.log(typeof primaryKeywords);
+
     const additionalKeywordsMap = {};
 
     let currentUrl = '';
@@ -52,7 +55,7 @@ function optimizeContent() {
     // cleanedContent = cleanedContent.replace(/<\/strong>!/g, '!');
 
 
-    cleanedContent = cleanedContent.replace(/<p><strong>H[1-2]:/g, '<h2>');
+    cleanedContent = cleanedContent.replace(/<p><strong>H[1-2]: /g, '<h2>');
 
     cleanedContent = cleanedContent.replace(/<\/strong><\/p>/g, '<\/h2>');
 
@@ -110,13 +113,31 @@ function optimizeContent() {
     });
 
         // Wrap additional keywords in <a> tags with the relevant URLs and update keyword statistics
-    Object.keys(additionalKeywordsMap).forEach(url => {
-        const keywords = additionalKeywordsMap[url];
-        keywords.forEach(keyword => {
-            const keywordPattern = new RegExp(keyword, "gi");
-            
-                // Check if the keyword is not in the primary keywords list
-                if (!primaryKeywords.includes(keyword)) {
+        Object.keys(additionalKeywordsMap).forEach(url => {
+            const keywords = additionalKeywordsMap[url];
+            keywords.forEach(keyword => {
+                const keywordPattern = new RegExp(`\\b${keyword}\\b`, "gi");
+                
+                // Check if the keyword is not part of any primary keyword
+                const isSecondaryKeyword = !primaryKeywords.some(primaryKeyword => {
+                    const primaryKeywordWords = primaryKeyword.split(" ");
+                    let lastMatchedIndex = -1;
+                    
+                    // Iterate through words in the secondary keyword
+                    for (const word of keyword.split(" ")) {
+                        const matchIndex = primaryKeywordWords.indexOf(word);
+                        if (matchIndex > lastMatchedIndex) {
+                            lastMatchedIndex = matchIndex;
+                        } else {
+                            // If the words in the secondary keyword are not in the same order as the primary keyword, it's not part of it
+                            return false;
+                        }
+                    }
+                    
+                    return true; // All words in the secondary keyword are in the same order as the primary keyword
+                });
+
+                if (isSecondaryKeyword) {
                     optimizedContent = optimizedContent.replace(keywordPattern, match => {
                         // Update keyword statistics for <a> tags
                         if (!keywordStats[keyword]) {
@@ -188,9 +209,11 @@ function finishOptimization() {
         keywords.forEach(keyword => {
             const strongTagCount = (keywordStats[keyword] && keywordStats[keyword].strongTagCount) || 0;
             const aTagCount = (keywordStats[keyword] && keywordStats[keyword].aTagCount) || 0;
+            const emTagCount = (keywordStats[keyword] && keywordStats[keyword].emTagCount) || 0;
             keywordStatistics[keyword] = {
                 strongTagCount,
-                aTagCount
+                aTagCount,
+                emTagCount
             };
         });
     });

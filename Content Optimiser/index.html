@@ -11,8 +11,8 @@
     <div id="app-container">
         <h1>SEO Content Optimizer</h1>
         <h3>Enter your HTML content:</h3>
-        <p class="subtitle-text">Put it straight from the .docx file into <a href="https://wordhtml.com/">https://wordhtml.com/</a> first.</p>
-        <p class="example-text">Should look something like: </br>
+        <p class="subtitle-text">Put it straight from the .docx file into <a href="https://wordhtml.com/">https://wordhtml.com/</a> first. Then rinse and repeat for each file.</p>
+        <p class="example-text">Should look something like: <br>
         <i>
             &lt;p&gt;&lt;strong&gt;H1: How to find rewarding franchise opportunities under 100k&lt;/strong&gt;&lt;/p&gt;<br>
             &lt;p&gt;A common question that Guerrilla Franchising receives is, "Will a &lt;strong&gt;franchise under 100k&lt;/strong&gt; yield a high ROI?"&lt;/p&gt;
@@ -21,7 +21,7 @@
         <textarea id="htmlContent" rows="20" cols="50"></textarea>
         <h3>Enter Keywords for current page:</h3>
         <p class="subtitle-text">One keyword per line w/ no empty lines in between: </p>
-        <p class="example-text"></br>
+        <p class="example-text"><br>
         <i>
             franchises under 100k<br>
             franchise under 100k<br>
@@ -56,6 +56,15 @@
             <h2>Keyword Statistics</h2>
             <ul id="keywordList"></ul>
         </div>
+
+        <h4>Known Bugs/Issues</h4>
+        <ul>
+            <li>Turns H1s into H2s. Can be fixed if this is a big deal.</li>
+            <li>If an internal link opportunity is presented i.e. 'franchise' but the page already has a primary KW with 'franchise' in it, it will be ignored and strong tagged only.</li>
+            <li>em tags appear in headings when keywords occur - this is to highlight that there is a keyword occurence in that heading.</li>
+            <li>If you get the formatting of the text fields wrong it will break.</li>
+            <li>Only works with exact matches, case doesn't matter however.</li>
+        </ul>
 
         <script src="script.js"></script>
     </div>

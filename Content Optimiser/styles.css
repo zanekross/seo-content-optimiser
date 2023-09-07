@@ -67,7 +67,7 @@ pre {
     margin-top: 20px;
 }
 
-ul {
+/*ul {
     list-style: none;
     padding: 0;
 }
@@ -75,7 +75,7 @@ ul {
 li {
     margin-bottom: 10px;
     font-weight: bold;
-}
+}*/
 
 #app-container {
     width: 90%;
