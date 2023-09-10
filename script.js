@@ -1,12 +1,126 @@
 const keywordStats = {};
 
+// Function to convert a text line into a heading using <h1>, <h2> or <h3> tags
+function convertToHeading(line) {
+  const h1HeadingRegex = /^(h1:)/i;
+  const h2HeadingRegex = /^(h2:)/i;
+  const h3HeadingRegex = /^(h3:)/i;
+  
+  if ( h1HeadingRegex.test(line) ) {
+    return `<h1>${line.slice(3).trim()}</h1>`;
+  }
+  if ( h2HeadingRegex.test(line) ) {
+    return `<h2>${line.slice(3).trim()}</h2>`;
+  }
+  if ( h3HeadingRegex.test(line) ) {
+    return `<h3>${line.slice(3).trim()}</h3>`;
+  }
+}
+
+// Function to get the index for the last list item
+function getListEndIndex(index, data) {
+  const orderedListRegex = /^(\d+[\.\)]\s*)/;
+  const unorderedListRegex = /^([-*]\s*)/;
+  
+  let j = index;
+  let lastIndex = j;
+  while (j < data.length) {
+    if (orderedListRegex.test(data[j]) == false && unorderedListRegex.test(data[j]) == false) {
+      lastIndex = j - 1;
+      break;
+    }
+    j++;
+  }
+  if (j == data.length) {
+    lastIndex = j - 1;
+  }
+  return lastIndex;
+}
+
+// Function to convert input text into HTML
+function convertToHTML(inputText) {
+  // If input text is empty, display error message
+  if (inputText == "") {
+    console.log("No input data provided!");
+    return;
+  }
+  
+  // Convert input text into a list of text blocks based on new lines
+  let blocks = inputText.trim().split("\n");
+  
+  // Define our regular expression to identify each text blocks
+  const headingRegex = /^(?:h1:|h2:|h3:)/i;         // Headings
+  const orderedListRegex = /^(\d+[\.\)]\s*)/;       // Ordered List
+  const unorderedListRegex = /^([-*]\s*)/;          // Unordered List
+  
+  // Loop through each text block to convert them using appropriate HTML tags
+  let i=0
+  while (i < blocks.length) {
+    // If the current text block is empty meaning, an empty line, move to the next one
+    if (blocks[i].trim() == "") {
+      i++;
+      continue;
+    }
+    // If the current text block is not empty, convert it using the appropriate HTML tag
+    if ( headingRegex.test(blocks[i]) ) {
+      // If its heading, convert it using the corresponding heading tags <h1>, <h2> or <h3>
+      blocks[i] = convertToHeading(blocks[i]);
+      
+    } else if ( orderedListRegex.test(blocks[i]) || unorderedListRegex.test(blocks[i]) ) {
+      // If its list items, convert it using corresponsing list tags <ol> or <ul> with <li> tags
+      let listType = orderedListRegex.test(blocks[i]) ? "ol" : "ul";
+      
+      // Mark the start and end index for the list items
+      let listStartIndex = i;
+      let listEndIndex = getListEndIndex(i, blocks);
+
+      // Wrap the starting text block with corresponding opening list tag 
+      if (listType == "ol") {
+        blocks[listStartIndex] = `<ol>\n<li>${blocks[listStartIndex].replace(orderedListRegex, "")}</li>`;
+      } else {
+        blocks[listStartIndex] = `<ul>\n<li>${blocks[listStartIndex].replace(unorderedListRegex, "")}</li>`;
+      }
+
+      // For all subsequent text blocks that are a list item, wrap them with <li> tags
+      let j = listStartIndex + 1;
+      while (j <= listEndIndex) {
+        blocks[j] = listType == "ol" ? blocks[j].replace(orderedListRegex, "") : blocks[j].replace(unorderedListRegex, "");
+        blocks[j] = "<li>" + blocks[j] + "</li>";
+        j++;
+      }
+
+      // Wrap the last text block with corresponding closing list tag
+      blocks[listEndIndex] += `\n</${listType}>`;
+      
+      // Update the loop counter to the last index so that it can resume looping through the remaining text blocks
+      i = listEndIndex;
+    } else {
+      // For everything else, convert it using <p> tags
+      blocks[i] = `<p>${blocks[i]}</p>`
+    }
+    
+    i++;
+  }
+  
+  // Append the list of all converted text blocks to the result
+  let result = "";
+  for (i=0; i < blocks.length; i++) {
+    result += blocks[i] + "\n";
+  }
+  
+  // Return the result
+  return result;
+}
+
 function optimizeContent() {
     document.getElementById('outputContent').style.display = 'block';
     document.getElementById('keywordStatistics').style.display = 'block';
     document.getElementById('finishButton').style.display = 'block';
     document.getElementById('copyToClipboardButton').style.display = 'block';
 
-    const htmlContent = document.getElementById("htmlContent").value;
+    // Utilised the convertToHTML function for converting the initial content to HTML
+    const htmlContent = convertToHTML(document.getElementById("htmlContent").value);
+    
     const keywordsTextarea = document.getElementById("keywords");
     const primaryKeywords = keywordsTextarea.value.split("\n").map(keyword => keyword.trim());
     const additionalKeywordsTextarea = document.getElementById("additionalKeywords");
